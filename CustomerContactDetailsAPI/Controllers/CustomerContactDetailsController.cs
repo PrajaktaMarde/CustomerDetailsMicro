@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CustomerContactDetailsData.Models;
 using CustomerContactDetailsData.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ namespace CustomerContactDetailsAPI.Controllers
             _unitOfWork = unitOfWork;
         }
         // GET: api/CustomerContactDetails
+        [Route("getall")]
         [HttpGet]
         public async Task<IActionResult> GetCustomerContactDetails()
         {
@@ -33,8 +35,13 @@ namespace CustomerContactDetailsAPI.Controllers
 
         // POST: api/CustomerContactDetails
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> AddCustomerContactDetails(CustomerContactDetails customerContactDetails)
         {
+
+            bool isSaved = await _unitOfWork.CustomerContactDetails.Add(customerContactDetails);
+            await _unitOfWork.CompleteAsync();
+            return isSaved ? (ActionResult)Ok("Customer details added sucessfully!") : BadRequest("Customer Details aleardy Present");
+
         }
 
         // PUT: api/CustomerContactDetails/5
