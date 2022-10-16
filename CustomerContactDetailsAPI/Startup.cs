@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using CustomerContactDetailsData.Models;
+using CustomerContactDetailsData.UnitOfWork;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,7 +29,8 @@ namespace CustomerContactDetailsAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-           // services.AddDbContext<CustomerContactDetailsContext>(o => o.UseSqlServer(Configuration.GetConnectionString("CustomerContactDetailsDB")));
+            services.AddDbContext<CustomerContactDetailsContext>(o => o.UseSqlServer(Configuration.GetConnectionString("CustomerContactDetailsDB")));
+            services.AddTransient<IUnitOfWork, UnitOfWorkClass>();
             services.AddSwaggerGen(c => 
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
