@@ -64,7 +64,7 @@ namespace CustomerContactDetailsAPI.Controllers
             }
         }
 
-        // PUT: api/CustomerContactDetails/5
+        // PUT: api/CustomerContactDetails/
         [HttpPut]
         public async Task<IActionResult> UpdateCustomerContactDetails(CustomerContactDetails customerContactDetails)
         {

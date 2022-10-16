@@ -15,7 +15,7 @@ namespace CustomerContactDetailsData.Models
     {
         public CustomerContactDetailsValidator()
         {
-
+            // for validating all the fields 
             RuleFor(x => x.CustSocialSecurityNumber).NotNull().NotEmpty().MinimumLength(10).WithMessage(" Social Security Number must not be less than 10 characters.").MaximumLength(12).WithMessage(" PhoneNumber must not exceed 12 characters.");
             RuleFor(x => x.CustEmailId).EmailAddress();
             RuleFor(x => x.CustPhoneNumber).MaximumLength(12).WithMessage(" PhoneNumber must not exceed 12 characters.").MinimumLength(9).WithMessage(" PhoneNumber must not be less than 9 characters.")
