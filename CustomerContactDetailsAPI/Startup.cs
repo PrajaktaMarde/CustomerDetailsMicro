@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CustomerContactDetailsData.Models;
 using CustomerContactDetailsData.UnitOfWork;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +32,7 @@ namespace CustomerContactDetailsAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<CustomerContactDetailsContext>(o => o.UseSqlServer(Configuration.GetConnectionString("CustomerContactDetailsDB")));
             services.AddTransient<IUnitOfWork, UnitOfWorkClass>();
+            services.AddScoped<IValidator<CustomerContactDetails>, CustomerContactDetailsValidator>();
             services.AddSwaggerGen(c => 
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info

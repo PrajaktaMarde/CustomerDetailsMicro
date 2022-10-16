@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentValidation.Results;
 using System.Linq;
 using System.Threading.Tasks;
 using CustomerContactDetailsData.Models;
 using CustomerContactDetailsData.UnitOfWork;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,9 +16,12 @@ namespace CustomerContactDetailsAPI.Controllers
     public class CustomerContactDetailsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CustomerContactDetailsController(IUnitOfWork unitOfWork)
+        private IValidator<CustomerContactDetails> _validator;
+
+        public CustomerContactDetailsController(IUnitOfWork unitOfWork, IValidator<CustomerContactDetails> validator)
         {
             _unitOfWork = unitOfWork;
+            _validator = validator;
         }
         // GET: api/CustomerContactDetails
         [Route("getall")]
@@ -27,21 +32,36 @@ namespace CustomerContactDetailsAPI.Controllers
         }
 
         // GET: api/CustomerContactDetails/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCustomerContactDetailsById(int id)
         {
-            return "value";
+            var customerDetails = await _unitOfWork.CustomerContactDetails.GetById(id);
+            return (customerDetails == null) ? (ActionResult)NotFound() : Ok(customerDetails);
+
         }
 
         // POST: api/CustomerContactDetails
         [HttpPost]
         public async Task<IActionResult> AddCustomerContactDetails(CustomerContactDetails customerContactDetails)
         {
+            ValidationResult result = await _validator.ValidateAsync(customerContactDetails);
+            if (result.IsValid)
+            {
+                bool isSaved = await _unitOfWork.CustomerContactDetails.Add(customerContactDetails);
+                await _unitOfWork.CompleteAsync();
+                return isSaved ? (ActionResult)Ok("Customer details added sucessfully!") : BadRequest("Customer Already Exists");
 
-            bool isSaved = await _unitOfWork.CustomerContactDetails.Add(customerContactDetails);
-            await _unitOfWork.CompleteAsync();
-            return isSaved ? (ActionResult)Ok("Customer details added sucessfully!") : BadRequest("Customer Details aleardy Present");
+            }
+            else
+            {
+                string errorMessage = null;
 
+                foreach (var error in result.Errors)
+                {
+                    errorMessage += error.ErrorMessage;
+                }
+                return BadRequest(errorMessage);
+            }
         }
 
         // PUT: api/CustomerContactDetails/5
