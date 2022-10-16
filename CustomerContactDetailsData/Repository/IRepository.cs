@@ -11,7 +11,7 @@ namespace CustomerContactDetailsData.Repository
 
         Task<bool> Update(TEntity entity);
 
-        Task<bool> Remove(int id);
+        bool Remove(TEntity entity);
 
         Task<TEntity> GetById(int id);
         Task<IEnumerable<TEntity>> GetAll();

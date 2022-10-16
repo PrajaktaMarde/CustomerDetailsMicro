@@ -33,7 +33,7 @@ namespace CustomerContactDetailsData.Repository
             return await dbSet.ToListAsync();
         }
 
-        public virtual Task<bool> Remove(int id)
+        public virtual bool Remove(TEntity entity)
         {
             throw new NotImplementedException();
 

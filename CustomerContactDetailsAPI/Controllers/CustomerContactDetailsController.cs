@@ -45,15 +45,29 @@ namespace CustomerContactDetailsAPI.Controllers
         }
 
         // PUT: api/CustomerContactDetails/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<IActionResult> UpdateCustomerContactDetails(CustomerContactDetails customerContactDetails)
         {
+            
+                bool isUpdated = await _unitOfWork.CustomerContactDetails.Update(customerContactDetails);
+                await _unitOfWork.CompleteAsync();
+                return isUpdated ? (ActionResult)Ok("Customer details updated sucessfully!") : BadRequest("Error in updating Customer Details"); ;
+
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var item = await _unitOfWork.CustomerContactDetails.GetById(id);
+
+            if (item == null)
+                return BadRequest();
+
+            bool isDeleted = _unitOfWork.CustomerContactDetails.Remove(item);
+            await _unitOfWork.CompleteAsync();
+
+            return  isDeleted ? (ActionResult)Ok("Customer details deleted sucessfully!") : BadRequest();
         }
     }
 }

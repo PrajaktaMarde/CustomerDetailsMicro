@@ -36,5 +36,41 @@ namespace CustomerContactDetailsData.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public override  bool Remove(CustomerContactDetails customerContactDetails)
+        {
+            try
+            {
+                dbSet.Remove(customerContactDetails);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public override async Task<bool> Update(CustomerContactDetails customerContactDetails)
+        {
+            try
+            {
+                var existingCustomer = await dbSet.Where(x => x.CustomerId == customerContactDetails.CustomerId)
+                                                    .FirstOrDefaultAsync();
+
+                if (existingCustomer == null)
+                    return await Add(customerContactDetails);
+
+                existingCustomer.CustEmailId = customerContactDetails.CustEmailId;
+                existingCustomer.CustPhoneNumber = customerContactDetails.CustPhoneNumber;
+                dbSet.Update(existingCustomer);
+
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
