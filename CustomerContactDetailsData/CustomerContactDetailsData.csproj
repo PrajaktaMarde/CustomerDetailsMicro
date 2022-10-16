@@ -8,4 +8,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\UnitOfWork\" />
+    <Folder Include="Data\Repository\" />
+  </ItemGroup>
+
 </Project>
